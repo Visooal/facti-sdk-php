@@ -5,5 +5,17 @@
 
 	//echo Facti::world();
 
-	$Facti = new Facti('a87ff679a2f3e71d9181a67b7542122c', 'b67fe209e96a61ee3e715c55633b5e9e');
+	$Facti = new Facti('8f14e45fceea167a5a36dedd4bea2543', 'bedbce3ae19181f53b56b99f0e92e3ac', true);
+	$result = $Facti->creditCardChargeCK(array(
+		'from_rfc'=>'CID74112584A'
+		,'to_email'=>'gustavomanolo@gmail.com'
+		,'number'=>'4111111111111111'
+		,'exp_month'=>12
+		,'exp_year'=>2015
+		,'cvc'=>123
+		,'name'=>'Thomas Logan'
+		,'description'=>'Payment description'
+		,'amount'=>200
+		,'currency'=>'MXN'
+	));
 ?>
