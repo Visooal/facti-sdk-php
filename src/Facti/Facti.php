@@ -97,6 +97,7 @@
 
 
 		public static function world(){
+			//Comment
         	return 'Hello World, Composer!';
     	}
 
