@@ -60,7 +60,7 @@
 				&& isset($arrayDetails['to_email']) && !empty($arrayDetails['to_email']) ){
 					try{
 						$client = new Client();
-						$url = ($this->env=="sandbox")? '' : 'https://api.facti.mx/v1/payments/creditcard_charge_ck';
+						$url = ($this->env=="sandbox")? '' : 'https://api.facti.mx/v1/payments/creditcard_charge_ck.php';
 						$request = $client->post($url, array(), array(
 						    'client_id' => $this->clientId
 						    ,'api_key' => $this->apiKEY
