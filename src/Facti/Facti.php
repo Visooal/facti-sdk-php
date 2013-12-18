@@ -97,6 +97,117 @@
 			
 		}
 
+		//-> Function to get payment ways for a company given it's RFC
+		function getCompanyRFCPaymentWays($rfc){
+			if(!empty($rfc)){
+				try{
+					$client = new Client();
+
+					$url = ($this->env=="sandbox")? 'http://api.facti.tst/v1/payments/company_payment_ways' : 'https://api.facti.mx/v1/payments/company_payment_ways';
+					$request = $client->post($url, array(), array(
+						'client_id' => $this->clientId
+						,'api_key' => $this->apiKEY
+						,'rfc' => $rfc
+					));
+					$response = $request->send();
+
+					$resultObj = json_decode($response->getBody());
+					if($resultObj->result==1){
+						return $resultObj;
+					}else{
+						die($resultObj->msg.' (Facti)');
+					}
+				} catch (Exception $e) {
+					echo 'Error occurred: ',  $e->getMessage(), "\n";
+				}
+			}
+		}
+
+		//-> Function to request an STP payment
+		function STPPaymentRequest($arrayDetails){
+			if(is_array($arrayDetails)){
+				if( isset($arrayDetails['from_rfc']) && !empty($arrayDetails['from_rfc']) 
+				&& isset($arrayDetails['to_email']) && !empty($arrayDetails['to_email']) 
+				&& isset($arrayDetails['total_amount']) && !empty($arrayDetails['total_amount']) && is_numeric($arrayDetails['total_amount']) ){
+					//-> Assing params to vars
+					$fromRFC = $arrayDetails['from_rfc'];
+					$toEmail = $arrayDetails['to_email'];
+					$totalAmount = $arrayDetails['total_amount'];
+					
+					//-> Set optional params
+					$toRFC = ( isset($arrayDetails['to_rfc']) && !empty($arrayDetails['to_rfc']) )? $arrayDetails['to_rfc'] : 'XAXX010101000';
+					$serie = ( isset($arrayDetails['serie']) && !empty($arrayDetails['serie']) )? $arrayDetails['serie'] : '';
+					$folio = ( isset($arrayDetails['folio']) && !empty($arrayDetails['folio']) )? $arrayDetails['folio'] : 1;
+
+					//-> ** Get payment ways for the RFC that's requesting the payment
+					$arraySTPPaymentWaysIds = array();//-> Array that contains only id's for payment types of "stp"
+					$resultPaymentWays = $this->getCompanyRFCPaymentWays($fromRFC);
+					foreach($resultPaymentWays->payment_ways as $currentPaymentWay){
+						if($currentPaymentWay->type=="stp"){
+							$arraySTPPaymentWaysIds[] = $currentPaymentWay->id;
+						}
+					}
+
+					if(count($arraySTPPaymentWaysIds)>0){
+						//-> Minimum of STP payment types
+						try{
+							$client = new Client();
+
+							$url = ($this->env=="sandbox")? 'http://api.sandbox.facti.mx/v1/payments/new_request' : 'https://api.facti.mx/v1/payments/new_request';
+							$request = $client->post($url, array(), array(
+								'client_id' => $this->clientId
+								,'api_key' => $this->apiKEY
+								,'serie' => $serie
+								,'folio' => $folio
+								,'from_rfc' => $fromRFC
+								,'to_rfc' => $toRFC
+								,'to_email' => $toEmail
+								,'total_amount' => $totalAmount
+								,'payment_ways_ids' => $arraySTPPaymentWaysIds
+							));
+							$response = $request->send();
+
+							$resultObj = json_decode($response->getBody());
+							if($resultObj->result==1){
+								return $resultObj;
+							}else{
+								die($resultObj->msg.' (Facti)');
+							}
+						} catch (Exception $e) {
+							echo 'Error occurred: ',  $e->getMessage(), "\n";
+						}
+					}else{
+						//-> No minimum of STP payment types
+						die("No se cuenta con por lo menos una cuenta de tipo STP");
+					}
+					
+
+					/*try{
+						$client = new Client();
+
+						$url = ($this->env=="sandbox")? 'http://api.sandbox.facti.mx/v1/payments/new_request' : 'http://api.sandbox.facti.mx/v1/payments/new_request';
+						$request = $client->post($url, array(), array(
+							'client_id' => $this->clientId
+							,'api_key' => $this->apiKEY
+							,'serie' => $rfc
+							,'folio' => $rfc
+							,'from_rfc' => $rfc
+							,'to_rfc' => $rfc
+							,'to_email' => $rfc
+							,'total_amount' => $rfc
+							,'payment_ways_ids' => $rfc
+						));
+					} catch (Exception $e) {
+						echo 'Error occurred: ',  $e->getMessage(), "\n";
+					}*/
+
+				}else{
+					die("No se han recibido los parámetros necesarios para procesar el pago. (Facti)");
+				}
+			}else
+				die("No se han mandado los tipos de datos requeridos para realizar el pago. (Facti)");
+		}
+
 
 		public static function world(){
 			//Comment
