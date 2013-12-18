@@ -124,7 +124,7 @@
 		}
 
 		//-> Function to request an STP payment
-		function STPPaymentRequest($arrayDetails){
+		function STPPaymentRequest($arrayDetails, $adParamsArray=array()){
 			if(is_array($arrayDetails)){
 				if( isset($arrayDetails['from_rfc']) && !empty($arrayDetails['from_rfc']) 
 				&& isset($arrayDetails['to_email']) && !empty($arrayDetails['to_email']) 
@@ -154,7 +154,9 @@
 							$client = new Client();
 
 							$url = ($this->env=="sandbox")? 'http://api.sandbox.facti.mx/v1/payments/new_request' : 'https://api.facti.mx/v1/payments/new_request';
-							$request = $client->post($url, array(), array(
+							
+							//-> Forms array with POST params to be able to add adParams
+							$arrayPOST = array(
 								'client_id' => $this->clientId
 								,'api_key' => $this->apiKEY
 								,'serie' => $serie
@@ -164,7 +166,15 @@
 								,'to_email' => $toEmail
 								,'total_amount' => $totalAmount
 								,'payment_ways_ids' => $arraySTPPaymentWaysIds
-							));
+							);
+							//-> Add add Params to the "$arrayPOST"
+							foreach($adParamsArray as $key=>$paramVal){
+								if(!array_key_exists($key, $arrayPOST)){
+									$arrayPOST[$key] = $paramVal;
+								}
+							}
+
+							$request = $client->post($url, array(), $arrayPOST);
 							$response = $request->send();
 
 							$resultObj = json_decode($response->getBody());

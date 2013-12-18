@@ -26,11 +26,15 @@
 	//$result = $Facti->getCompanyRFCPaymentWays('CID74112584A');
 
 	//-> Get STP references for a new payment request
+	$arrayAdParams = array(
+		'user_id'=>1
+		,'course_id'=>2
+	);
 	$result = $Facti->STPPaymentRequest(array(
 		'from_rfc'=>'CID74112584A'
 		,'to_email'=>'gustavomanolo@gmail.com'
 		,'total_amount'=>200
-	));
+	), $arrayAdParams);
 	var_dump($result);
 
 	/*-> from_rfc, to_email, to_rfc, total_amount, limit_payment_date, send_email
