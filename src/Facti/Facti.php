@@ -81,11 +81,12 @@
 						//echo $response->getContentType();
 						//echo $response->getBody();
 						$resultObj = json_decode($response->getBody());
-						if($resultObj->result==1){
+						return $resultObj;
+						/*if($resultObj->result==1){
 							return $resultObj;
 						}else{
 							die($resultObj->msg.' (Facti)');
-						}
+						}*/
 					} catch (Exception $e) {
 					    echo 'Error occurred: ',  $e->getMessage(), "\n";
 					}
