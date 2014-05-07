@@ -168,6 +168,7 @@
 								,'total_amount' => $totalAmount
 								,'payment_ways_ids' => $arraySTPPaymentWaysIds
 							);
+							
 							//-> Add add Params to the "$arrayPOST"
 							foreach($adParamsArray as $key=>$paramVal){
 								if(!array_key_exists($key, $arrayPOST)){
