@@ -124,6 +124,81 @@
 			}
 		}
 
+		//-> Function to request bank references
+		function BankPaymentRequest($arrayDetails){
+			if(is_array($arrayDetails)){
+				if( isset($arrayDetails['from_rfc']) && !empty($arrayDetails['from_rfc']) 
+				&& isset($arrayDetails['to_email']) && !empty($arrayDetails['to_email']) 
+				&& isset($arrayDetails['total_amount']) && !empty($arrayDetails['total_amount']) && is_numeric($arrayDetails['total_amount']) ){
+					//-> Assing params to vars
+					$fromRFC = $arrayDetails['from_rfc'];
+					$toEmail = $arrayDetails['to_email'];
+					$totalAmount = $arrayDetails['total_amount'];
+					
+					//-> Set optional params
+					$toRFC = ( isset($arrayDetails['to_rfc']) && !empty($arrayDetails['to_rfc']) )? $arrayDetails['to_rfc'] : 'XAXX010101000';
+					$serie = ( isset($arrayDetails['serie']) && !empty($arrayDetails['serie']) )? $arrayDetails['serie'] : '';
+					$folio = ( isset($arrayDetails['folio']) && !empty($arrayDetails['folio']) )? $arrayDetails['folio'] : 1;
+
+					//-> ** Get payment ways for the RFC that's requesting the payment
+					$arraySTPPaymentWaysIds = array();//-> Array that contains only id's for payment types of "stp"
+					$resultPaymentWays = $this->getCompanyRFCPaymentWays($fromRFC);
+					foreach($resultPaymentWays->payment_ways as $currentPaymentWay){
+						if($currentPaymentWay->type=="bank"){
+							$arraySTPPaymentWaysIds[] = $currentPaymentWay->id;
+						}
+					}
+
+					if(count($arraySTPPaymentWaysIds)>0){
+						//-> Minimum of STP payment types
+						try{
+							$client = new Client();
+
+							$url = ($this->env=="sandbox")? 'http://api.sandbox.facti.mx/v1/payments/new_request' : 'https://api.facti.mx/v1/payments/new_request';
+							
+							//-> Forms array with POST params to be able to add adParams
+							$arrayPOST = array(
+								'client_id' => $this->clientId
+								,'api_key' => $this->apiKEY
+								,'serie' => $serie
+								,'folio' => $folio
+								,'from_rfc' => $fromRFC
+								,'to_rfc' => $toRFC
+								,'to_email' => $toEmail
+								,'total_amount' => $totalAmount
+								,'payment_ways_ids' => $arraySTPPaymentWaysIds
+							);
+							//-> Add add Params to the "$arrayPOST"
+							foreach($adParamsArray as $key=>$paramVal){
+								if(!array_key_exists($key, $arrayPOST)){
+									$arrayPOST[$key] = $paramVal;
+								}
+							}
+
+							$request = $client->post($url, array(), $arrayPOST);
+							$response = $request->send();
+
+							$resultObj = json_decode($response->getBody());
+							if($resultObj->result==1){
+								return $resultObj;
+							}else{
+								die($resultObj->msg.' (Facti)');
+							}
+						} catch (Exception $e) {
+							echo 'Error occurred: ',  $e->getMessage(), "\n";
+						}
+					}else{
+						//-> No minimum of STP payment types
+						die("No se cuenta con por lo menos una cuenta de tipo Bank");
+					}
+
+				}else{
+					die("No se han recibido los parámetros necesarios para procesar el pago. (Facti)");
+				}
+			}else
+				die("No se han mandado los tipos de datos requeridos para realizar el pago. (Facti)");
+		}
+
 		//-> Function to request an STP payment
 		function STPPaymentRequest($arrayDetails, $adParamsArray=array()){
 			if(is_array($arrayDetails)){
