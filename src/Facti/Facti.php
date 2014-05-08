@@ -125,7 +125,7 @@
 		}
 
 		//-> Function to request bank references
-		function BankPaymentRequest($arrayDetails){
+		function BankPaymentRequest( $arrayDetails, $adParamsArray=array() ){
 			if(is_array($arrayDetails)){
 				if( isset($arrayDetails['from_rfc']) && !empty($arrayDetails['from_rfc']) 
 				&& isset($arrayDetails['to_email']) && !empty($arrayDetails['to_email']) 
@@ -168,7 +168,7 @@
 								,'total_amount' => $totalAmount
 								,'payment_ways_ids' => $arraySTPPaymentWaysIds
 							);
-							
+
 							//-> Add add Params to the "$arrayPOST"
 							foreach($adParamsArray as $key=>$paramVal){
 								if(!array_key_exists($key, $arrayPOST)){
