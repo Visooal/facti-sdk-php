@@ -25,15 +25,15 @@ require 'vendor/autoload.php';
 $Facti = new Facti(FACTI_CLIENTID, FACTI_KEY);//-> Para entorno de pruebas
 //-> En producción mandar 3er parámetro opcional "true" --> $Facti = new Facti(FACTI_CLIENTID, FACTI_KEY, true);
 $result = $Facti->creditCardChargeCK(array(
-	'from_rfc'=>RECEIVER_RFC
-	,'to_email'=>USERS_EMAIL
-	,'number'=>CC_NUMBER
-	,'exp_month'=>CC_EXP_MONTH
-	,'exp_year'=>CC_EXP_YEAR
-	,'cvc'=>CC_CV
-	,'name'=>CC_OWNERS_NAME
-	,'description'=>PAYMENT_DESCRIPTION
-	,'amount'=>AMOUNT
+	'from_rfc'=>RECEIVER_RFC//-> El RFC de la empresa/usuario que recibe el pago
+	,'to_email'=>USERS_EMAIL//-> El e-mail del cliente que realizará el pago
+	,'number'=>CC_NUMBER//-> El número de tarjeta del cliente
+	,'exp_month'=>CC_EXP_MONTH//-> El mes de expiración de la tarjeta de crédito del cliente
+	,'exp_year'=>CC_EXP_YEAR//-> El año de expiración de la tarjeta de crédito del cliente
+	,'cvc'=>CC_CV//-> El código CV de la tarjeta de crédito del cliente
+	,'name'=>CC_OWNERS_NAME//->El nombre del tarjetahabiente, tal cual aparece en la tarjeta de crédito
+	,'description'=>PAYMENT_DESCRIPTION//-> Descriptión del pago a realizar
+	,'amount'=>AMOUNT//-> Monto total del pago a realizar
 	,'currency'=>'MXN'
 ));
 ```
