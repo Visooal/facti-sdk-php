@@ -14,13 +14,13 @@ $Facti = new Facti(FACTI_CLIENTID, FACTI_KEY);//-> Para entorno de pruebas
 		$result = $Facti->creditCardChargeCK(array(
 			'from_rfc'=>CIDE_RFC
 			,'to_email'=>$_SESSION['user_courses']['email']//-> Change this value to the current user's logged in e-mail
-			,'number'=>$ccNumber
-			,'exp_month'=>$ccExpMonth
-			,'exp_year'=>$ccExpYear
-			,'cvc'=>$ccCVV
-			,'name'=>$ccOwnersName
-			,'description'=>'Payment description'
-			,'amount'=>$courseAmount
+			,'number'=>CC_NUMBER
+			,'exp_month'=>CC_EXP_MONTH
+			,'exp_year'=>CC_EXP_YEAR
+			,'cvc'=>CC_CV
+			,'name'=>CC_OWNERS_NAME
+			,'description'=>PAYMENT_DESCRIPTION
+			,'amount'=>AMOUNT
 			,'currency'=>'MXN'
 		));
 ```
