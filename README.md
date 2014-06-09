@@ -5,8 +5,9 @@ Facti PHP SDK
 
 Librería en PHP para interactuar con el API de http://www.facti.mx.
 
+## Instalación
 
-**Uso**
+## Uso
 
 ```php
 $Facti = new Facti(FACTI_CLIENTID, FACTI_KEY);//-> Para entorno de pruebas
