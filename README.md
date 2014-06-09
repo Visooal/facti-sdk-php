@@ -14,6 +14,10 @@ Agrega Facti-SDK-PHP a tu archivo composer.json. Si no usas Composer, deberías,
     }
 }
 ```
+Finalmente, incluye el autoloader al inicio de tu script PHP:
+```
+require 'vendor/autoload.php';
+```
 
 ## Uso
 
