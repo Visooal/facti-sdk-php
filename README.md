@@ -6,7 +6,7 @@ Facti PHP SDK
 Librería en PHP para interactuar con el API de http://www.facti.mx.
 
 ## Instalación
-Agrega Facti-PHP-SDK a tu archivo composer.json. Si no usas Composer, deberías, ya que es una forma excelente de incluir y administrar dependencias en tu aplicación PHP.
+Agrega Facti-SDK-PHP a tu archivo composer.json. Si no usas Composer, deberías, ya que es una forma excelente de incluir y administrar dependencias en tu aplicación PHP.
 ```
 {
     "require": {
